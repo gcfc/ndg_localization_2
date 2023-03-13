@@ -270,9 +270,10 @@ int main(){
 			vg.filter(*cloudFiltered);
 			// TODO: Find pose transform by using ICP or NDT matching
 			//pose = ....
-						
-			// Eigen::Matrix4d matching_transform = ICP(mapCloud, cloudFiltered, pose);
-			Eigen::Matrix4d matching_transform = NDT(mapCloud, cloudFiltered, pose);
+			pose = Pose(Point(vehicle->GetTransform().location.x, vehicle->GetTransform().location.y, vehicle->GetTransform().location.z), Rotate(vehicle->GetTransform().rotation.yaw * pi/180, vehicle->GetTransform().rotation.pitch * pi/180, vehicle->GetTransform().rotation.roll * pi/180)) - poseRef;
+
+			Eigen::Matrix4d matching_transform = ICP(mapCloud, cloudFiltered, pose);
+			// Eigen::Matrix4d matching_transform = NDT(mapCloud, cloudFiltered, pose);
 			pose = getPose(matching_transform);
 
 			// TODO: Transform scan so it aligns with ego's actual pose and render that scan
